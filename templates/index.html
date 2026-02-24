@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Registration</title>
     <style>
+        :root {
+            --bg-primary: #f5f7fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --text-label: #374151;
+            --border-color: #d1d5db;
+            --border-light: #e8ecef;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --input-bg: #ffffff;
+            --button-bg: #2563eb;
+            --button-hover: #1d4ed8;
+            --button-active: #1e40af;
+            --focus-shadow: rgba(37, 99, 235, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-label: #cbd5e1;
+            --border-color: #334155;
+            --border-light: #475569;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --input-bg: #334155;
+            --button-bg: #3b82f6;
+            --button-hover: #2563eb;
+            --button-active: #1d4ed8;
+            --focus-shadow: rgba(59, 130, 246, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,37 +45,64 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
+            background: var(--bg-primary);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: background 0.3s ease;
         }
 
         .container {
-            background: #ffffff;
+            background: var(--bg-secondary);
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e8ecef;
+            box-shadow: 0 2px 10px var(--shadow);
+            border: 1px solid var(--border-light);
             padding: 40px;
             max-width: 500px;
             width: 100%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--button-bg);
         }
 
         h1 {
-            color: #1a1a1a;
+            color: var(--text-primary);
             text-align: center;
             margin-bottom: 10px;
             font-size: 1.9em;
             font-weight: 700;
+            transition: color 0.3s ease;
         }
 
         .subtitle {
             text-align: center;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin-bottom: 30px;
             font-size: 0.95em;
+            transition: color 0.3s ease;
         }
 
         .form-group {
@@ -53,9 +112,10 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #374151;
+            color: var(--text-label);
             font-weight: 600;
             font-size: 0.95em;
+            transition: color 0.3s ease;
         }
 
         input[type="text"],
@@ -63,19 +123,20 @@
         select {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #d1d5db;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 1em;
             transition: all 0.2s ease;
-            background: #ffffff;
+            background: var(--input-bg);
+            color: var(--text-primary);
         }
 
         input[type="text"]:focus,
         input[type="email"]:focus,
         select:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: var(--button-bg);
+            box-shadow: 0 0 0 3px var(--focus-shadow);
         }
 
         select {
@@ -87,10 +148,14 @@
             padding-right: 40px;
         }
 
+        [data-theme="dark"] select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233b82f6' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        }
+
         button[type="submit"] {
             width: 100%;
             padding: 14px;
-            background: #2563eb;
+            background: var(--button-bg);
             color: white;
             border: none;
             border-radius: 8px;
@@ -101,11 +166,11 @@
         }
 
         button[type="submit"]:hover {
-            background: #1d4ed8;
+            background: var(--button-hover);
         }
 
         button[type="submit"]:active {
-            background: #1e40af;
+            background: var(--button-active);
         }
 
         .icon {
@@ -120,12 +185,23 @@
             h1 {
                 font-size: 1.6em;
             }
+
+            .theme-toggle {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                right: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon">🌙</span>
+    </button>
+    
     <h1>Event Registration</h1>
     <p class="subtitle">Sign up and join us for an amazing experience</p>
 
@@ -158,6 +234,27 @@
         <button type="submit">Register Now</button>
     </form>
 </div>
+
+<script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to 'light'
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', currentTheme);
+    themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+    themeToggle.addEventListener('click', () => {
+        const theme = html.getAttribute('data-theme');
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    });
+</script>
 
 </body>
 </html>
